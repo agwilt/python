@@ -1,0 +1,3 @@
+This was a little encryption program, made as a birthday present for my father using the one time pad method (and it just pickles the keys :P). It should run on linux with python 3.X, and it *might* run on OS X.
+
+BUGS: Well, it just looks dead ugly on Linux, but Tk is just nice and easy, so it's staying that way until I decide to look at something else.
