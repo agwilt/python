@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# OneTime Papa Edition
-
 from tkinter import *
 from tkinter import filedialog
 from tkinter import simpledialog
