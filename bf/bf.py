@@ -2,19 +2,23 @@
 
 import sys
 
+# the --debug flag adds printed messages
 if "--debug" in sys.argv:
 	DEBUG = True
 	sys.argv.pop(sys.argv.index("--debug"))
 else:
 	DEBUG = False
 
+# read source code from file
+# TODO: add stdin (pipe) or prompt
 prog = open(sys.argv[1]).read()
 
-pc = 0
-p = 0
-tape = [0]
-loop_stack = []
+pc = 0			# program counter (for tape)
+p = 0			# brainfuck cell counter (that gets modified with +-)
+tape = [0]		# brainfuck 'tape' full of cells
+loop_stack = [] # a stack to keep track of all the [s and ]s
 
+# execution loop
 while pc < len(prog):
 
 	if DEBUG:
