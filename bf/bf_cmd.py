@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import string
+
 class BracketError(Exception):
 	def __init__(self, value):
 		self.value = value
@@ -12,7 +14,7 @@ class Machine():
 		self.tape = [0]
 		self.p = 0
 
-	def run(self, code):
+	def run(self, code, step=False):
 		pc = 0
 		loop_stack = []
 		brackets = 0
@@ -59,6 +61,8 @@ class Machine():
 				else:
 					loop_stack.append(pc)
 
+			if step:
+				input()
 			pc += 1
 		if printed:
 			print('')
@@ -84,11 +88,22 @@ class Machine():
 		print("%d," % self.p, self.tape)
 
 
+def write_to(program, command):
+	split = command.index(' ')
+	line = int(command[:split])
+	command = command[(split+1):]
+	if line < len(program):
+		program[line] = command
+	else:
+		while len(program) < line:
+			program.append('')
+		program.append(command)
 
 if __name__ == "__main__":
 
-	helptext = "h: Display this help text\nq: Quit\nd: Print tape, pointer\nr: Reset tape"
+	helptext = "help: Display this help text\nquit: Quit\ndump: Print tape, pointer\nclear: Reset tape\nnew: Wipe program\nlist: List program\nrun: Run program\nsave <arg>: Save program as <arg>\nload <arg>: Load program from <arg>\nstep [arg]: step through program or optional arg"
 	tape = Machine()
+	program = []
 
 	while True:
 		try:
@@ -103,9 +118,33 @@ if __name__ == "__main__":
 			tape.dump()
 		elif command == "h" or command == "help":
 			print(helptext)
-		elif command == "r" or command == "reset":
+		elif command == "new":
+			program = []
+		elif command == "clear":
 			tape = Machine()
-			print("Tape Reset.")
+			print("Tape Reset")
+		elif command == "l" or command == "list":
+			for line in program:
+				print(line)
+		elif command == "r" or command == "run":
+			tape.run("".join(program))
+		elif command[:4] == "load":
+			f = open(command[5:],mode='r')
+			program = f.read().split('\n')
+			f.close()
+		elif command[:4] == "save":
+			f = open(command[5:],mode='w')
+			f.write('\n'.join(program))
+			f.close()
+		elif command == "step":
+			tape.run(program, step=True)
+		elif command[:4] == "step":
+			tape.run(command[5:], step=True)
+		elif command[0] in string.digits:
+			write_to(program, command)
 		else:
-			tape.run(command)
+			try:
+				tape.run(command)
+			except BracketError:
+				print("Error: Failed bracket count!")
 	print("Goodbye!")
