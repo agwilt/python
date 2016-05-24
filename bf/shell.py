@@ -124,8 +124,9 @@ if __name__ == "__main__":
 			tape = Machine()
 			print("Tape Reset")
 		elif command == "l" or command == "list":
-			for line in program:
-				print(line)
+			for number, line in enumerate(program):
+				if line != '':
+					print(number, line)
 		elif command == "r" or command == "run":
 			tape.run("".join(program))
 		elif command[:4] == "load":
