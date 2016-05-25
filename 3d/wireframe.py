@@ -20,7 +20,7 @@ def transform(vertex):
 def draw(point, screen):
 	x, y = point
 	if 0 <= x < Screen_x-1 and 0 < y <= Screen_y:
-		screen.addstr(Screen_y-y, x, 'O')
+		screen.addstr(Screen_y-y, x, 'x')
 
 def draw_line(p1,p2, screen):
 	if p1[0] == p2[0]:
@@ -31,14 +31,19 @@ def draw_line(p1,p2, screen):
 	else:
 		if p1[1] == p2[1]:
 			c = '-'
+		elif (p1[1] - p2[1])/(p1[0] - p2[0]) > 0.5:
+			c = '/'
+		elif (p1[1] - p2[1])/(p1[0] - p2[0]) < -0.5:
+			c = '\\'
 		else:
 			c = '*'
 		m = (p2[1] - p1[1])/(p2[0] - p1[0])
 		b = p1[1] - m*p1[0]
 		def f(x):
-			return int(m*x + b)
+			return m*x + b
 		for x in range((min(p1[0],p2[0])+1),max(p1[0],p2[0])):
-			y = f(x)
+			y = int(f(x))
+			r = f(x) % 1
 			if 0 <= x < Screen_x-1 and 0 < y <= Screen_y:
 				screen.addstr(Screen_y-y, x, c)
 
